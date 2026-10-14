@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Planes and Ships</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="map-wrap">
+    <svg id="map" aria-label="Map of aircraft">
+      <g id="world">
+        <g id="tiles"></g>
+        <rect id="dim" x="0" y="0" width="1048576" height="1048576"/>
+        <g id="land"></g>
+        <g id="rivers"></g>
+        <g id="highways"></g>
+        <g id="bangkok"></g>
+      </g>
+      <g id="overlay"></g>
+    </svg>
+    <div id="controls">
+      <button id="zoom-in" title="Zoom in">+</button>
+      <button id="zoom-out" title="Zoom out">−</button>
+      <button id="fit" title="Show everything">Fit all</button>
+      <button id="thailand" title="Show all of Thailand">Thailand</button>
+      <div id="mode" class="segmented" role="radiogroup" aria-label="What to receive">
+        <button data-mode="planes" role="radio" aria-checked="true" title="Use the dongle for planes only (1090 MHz)">Planes</button>
+        <button data-mode="ships" role="radio" aria-checked="false" title="Use the dongle for ships only (162 MHz)">Ships</button>
+        <button data-mode="both" role="radio" aria-checked="false" title="Planes and ships; one dongle takes turns">Both</button>
+      </div>
+      <button id="basemap" title="Dim or brighten the satellite map">Dark map</button>
+    </div>
+    <div id="attribution">Imagery © Esri, Maxar, Earthstar Geographics</div>
+    <div id="legend">
+      <span class="for-planes">Altitude</span>
+      <div id="legend-bar" class="for-planes"></div>
+      <div id="legend-labels" class="for-planes"><span>0</span><span>10k</span><span>20k</span><span>30k</span><span>40k ft</span></div>
+      <span class="legend-title for-ships">Ships</span>
+      <div id="ship-legend" class="for-ships"></div>
+    </div>
+  </main>
+  <aside id="panel">
+    <header>
+      <h1>Planes &amp; Ships</h1>
+      <div id="status" class="status">connecting…</div>
+      <div id="rx-planes" class="status rx" hidden></div>
+      <div id="rx-ships" class="status rx" hidden></div>
+      <dl id="stats">
+        <div class="for-planes"><dt>Aircraft</dt><dd id="stat-aircraft">0</dd></div>
+        <div class="for-ships"><dt>Ships</dt><dd id="stat-ships">0</dd></div>
+        <div class="for-planes"><dt>Plane msg/s</dt><dd id="stat-rate">0</dd></div>
+        <div class="for-ships"><dt>Ship msgs</dt><dd id="stat-shipmsgs">0</dd></div>
+      </dl>
+    </header>
+    <section id="details" hidden></section>
+    <h2 class="list-title for-planes">Aircraft <span id="count-aircraft"></span></h2>
+    <table id="list" class="for-planes">
+      <thead><tr><th>Flight</th><th>Alt ft</th><th>kt</th><th id="dist-col">km</th><th>Seen</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="empty" class="for-planes">No aircraft yet. Planes usually show up within a minute or two; a window or rooftop antenna helps a lot.</p>
+    <h2 class="list-title for-ships">Ships <span id="count-ships"></span></h2>
+    <table id="ship-list" class="for-ships">
+      <thead><tr><th>Name</th><th>Type</th><th>kn</th><th>Seen</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="ship-empty" class="for-ships">No ships yet. Ships need the antenna arms at about 46 cm, and you need a clear view toward the river or sea.</p>
+  </aside>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

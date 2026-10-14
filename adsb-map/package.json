@@ -1,0 +1,15 @@
+{
+  "name": "adsb-map",
+  "version": "1.0.0",
+  "description": "Live map of aircraft received with an RTL-SDR on 1090 MHz",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "demo": "node server.js --demo",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=18.3"
+  }
+}

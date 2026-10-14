@@ -1,0 +1,14 @@
+# Third-party driver/tool binaries (download separately, see README)
+bin/
+
+# Recordings and raw logs
+*.wav
+atis_check/
+*.log
+raw*.txt
+
+# Node / Python
+node_modules/
+__pycache__/
+*.pyc
+.venv/
