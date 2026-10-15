@@ -7,6 +7,9 @@ atis_check/
 *.log
 raw*.txt
 
+# Your saved radio favorites
+radio/favorites.json
+
 # Node / Python
 node_modules/
 __pycache__/

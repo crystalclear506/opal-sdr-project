@@ -6,6 +6,7 @@ Small tools for an **RTL-SDR Blog V4** dongle on Windows:
 |------|--------------|
 | `sdr.py` | Radio receiver for the terminal. Plays WFM, NFM, AM, USB and LSB live, scans a band for active signals, and records audio to WAV. |
 | `adsb.py` | Live terminal table of aircraft heard on 1090 MHz (ADS-B / Mode S): call sign, altitude, speed, heading, position and distance. |
+| `radio/` | Node.js radio in the browser: tune, choose the mode (WFM/NFM/AM/USB/LSB), squelch, signal meter, and **saved favorite frequencies**. Good for listening to ATC. |
 | `adsb-map/` | Node.js web map of **aircraft** (ADS-B, 1090 MHz) and **ships** (AIS, 162 MHz), streamed to the browser, with Bangkok and eastern Thailand base maps. |
 
 ## Hardware
@@ -108,12 +109,38 @@ The page opens at http://localhost:8765. With two dongles plugged in, planes use
 
 Only one program can use the dongle at a time. Close `sdr.py`, `adsb.py` or SDR++ before starting the map.
 
+### `radio/`: listen in the browser, with favorites
+
+```sh
+cd radio
+npm start                         # opens http://localhost:8766, tuned to 121.1 MHz AM
+node server.js --freq 101.1M      # start somewhere else (mode is guessed from the frequency)
+node server.js --gain 30 --ppm 2  # tuner gain and frequency correction
+npm run demo                      # simulated stations, no dongle needed
+npm test                          # DSP and favorites tests
+```
+
+Press **Play**, then tune by typing a frequency, using the ◀ ▶ buttons, or with the arrow keys. **☆ Save** stores the current frequency, mode and squelch as a favorite. Click a favorite (or press 1-9) to go back to it. Favorites are kept in `radio/favorites.json`, which is not in git.
+
+Favorites can go in **groups** such as *ATC* or *First responders*: type a group name when saving. **Scan** on a group works like a police scanner. It hops through the group's channels (about 0.6 s each) and stops on whichever one rises above the squelch. It stays there until the channel has been quiet for 2 s, then moves on. Use **Skip** (`n`) to move past a busy channel, and **Stop scan** (`Esc`) to stay where you are. Each channel uses the squelch saved with it.
+
+To find channels worth saving, sweep a band with `python sdr.py scan 136M 174M --time 120` (VHF) or `400M 470M` (UHF). Many police and fire services use digital radio (DMR, P25, TETRA), which sounds like buzzing and can't be decoded here. Only analog FM voice will be understandable. **Auto** sets the squelch just above the noise, so airband stays quiet between transmissions.
+
+The server runs `bin/rtl_tcp.exe` and demodulates in Node with the same DSP as `sdr.py`, so dB levels and squelch values match. It only opens the dongle while a page is playing, so after you stop or close the tab, the map or `sdr.py` can use the dongle again.
+
 ## Project layout
 
 ```
 sdr.py              terminal receiver / scanner
 adsb.py             terminal ADS-B table
 requirements.txt    Python dependencies
+radio/
+  server.js         runs rtl_tcp, streams audio + state to the page, favorites API
+  dsp.js            WFM / NFM / AM / SSB demodulators (port of sdr.py's)
+  favorites.js      favorite frequencies, saved to favorites.json
+  scanner.js        group scanning: hop channels, stop on activity
+  public/           browser radio (HTML/CSS/JS)
+  test/             node:test unit tests
 adsb-map/
   server.js         runs rtl_adsb + AIS-catcher, serves the map, streams updates
   decoder.js        Mode S / ADS-B decoding

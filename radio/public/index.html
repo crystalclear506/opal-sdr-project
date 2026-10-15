@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Radio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Radio</h1>
+      <div id="status" class="status">connecting…</div>
+    </header>
+
+    <section id="tuner" class="card">
+      <div class="readout">
+        <button id="down" class="tune-btn" title="Tune down one step (←)">◀</button>
+        <div class="freq-wrap">
+          <input id="freq" class="freq" inputmode="decimal" autocomplete="off" spellcheck="false"
+                 aria-label="Frequency" title="Type a frequency (e.g. 118.1, 162.55M, 7200k) and press Enter">
+          <span class="unit">MHz</span>
+        </div>
+        <button id="up" class="tune-btn" title="Tune up one step (→)">▶</button>
+      </div>
+      <div class="row center">
+        <label class="small">Step
+          <select id="step" title="Tuning step (↑ / ↓)"></select>
+        </label>
+        <button id="play" class="play" title="Start / stop listening (space)">▶ Play</button>
+        <button id="star" class="star" title="Save this frequency as a favorite (*)">☆ Save</button>
+      </div>
+
+      <div id="scan-bar" class="scan-bar" hidden>
+        <span id="scan-text"></span>
+        <button id="scan-skip" title="Skip to the next channel (n)">Skip ⏭</button>
+        <button id="scan-stop" title="Stop scanning and stay here (Esc)">Stop scan</button>
+      </div>
+
+      <div id="mode" class="segmented" role="radiogroup" aria-label="Mode"></div>
+
+      <div class="meter-wrap" title="Signal strength in the channel. The line is the squelch level: audio is muted below it.">
+        <div id="meter" class="meter"><div id="meter-bar"></div><div id="meter-sq"></div></div>
+        <div class="meter-labels"><span>-80</span><span>-60</span><span>-40</span><span>-20 dB</span></div>
+        <div class="readings">
+          <span>signal <b id="level">–</b></span>
+          <span id="muted" class="muted-tag" hidden>muted</span>
+          <span id="clipping" class="bad" hidden>clipping – lower the gain</span>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <label for="squelch">Squelch</label><b id="sq-val">off</b>
+        <input id="squelch" type="range" min="-81" max="-10" step="1" title="Mute the noise between transmissions (s / S). Far left = off.">
+        <button id="sq-auto" title="Set the squelch just above the current noise (a)">Auto</button>
+      </div>
+      <div class="ctl">
+        <label for="gain">Gain</label>
+        <select id="gain" class="wide" title="Tuner gain (g / G)"></select>
+      </div>
+      <div class="ctl">
+        <label for="volume">Volume</label><b id="vol-val">100%</b>
+        <input id="volume" type="range" min="0" max="300" step="5" value="100" title="Volume (- / +)">
+      </div>
+    </section>
+
+    <section id="favs" class="card">
+      <h2>Favorites</h2>
+      <form id="fav-form" class="row" hidden>
+        <input id="fav-name" placeholder="Name, e.g. Bangkok Approach" maxlength="60" autocomplete="off">
+        <input id="fav-group" class="group-input" list="group-list" placeholder="Group, e.g. First responders" maxlength="30" autocomplete="off">
+        <datalist id="group-list"></datalist>
+        <button type="submit">Save</button>
+        <button type="button" id="fav-cancel" class="ghost">Cancel</button>
+      </form>
+      <div id="fav-list"></div>
+      <p id="fav-empty" class="hint" hidden>No favorites yet. Tune somewhere and press ☆ Save.</p>
+    </section>
+
+    <p class="hint keys">
+      Keys: <kbd>space</kbd> play/stop · <kbd>←</kbd><kbd>→</kbd> tune · <kbd>↑</kbd><kbd>↓</kbd> step ·
+      <kbd>m</kbd> mode · <kbd>a</kbd> auto squelch · <kbd>s</kbd><kbd>S</kbd> squelch · <kbd>g</kbd><kbd>G</kbd> gain ·
+      <kbd>-</kbd><kbd>+</kbd> volume · <kbd>n</kbd> skip · <kbd>Esc</kbd> stop scan · <kbd>f</kbd> type a frequency · <kbd>*</kbd> save favorite · <kbd>1</kbd>–<kbd>9</kbd> favorites
+    </p>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
